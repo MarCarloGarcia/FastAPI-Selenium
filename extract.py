@@ -11,9 +11,10 @@ def createDriver() -> webdriver.Chrome:
     prefs = {"profile.managed_default_content_settings.images":2}
     chrome_options.headless = True
 
-
     chrome_options.add_experimental_option("prefs", prefs)
     myDriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    #service = Service(executable_path="E:\to save\App installer\chromedriver_win32")
+    #myDriver = webdriver.Chrome(service=service)
 
     return myDriver
 
