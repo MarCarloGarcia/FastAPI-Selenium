@@ -5,9 +5,7 @@
     "scripts": {
         "start": "uvicorn main:app --host 0.0.0.0 --port $PORT"
     },
-    "dependencies": {
-        "fastapi": "^0.80.0",
-        "uvicorn": "^0.18.3"},
+
     "repository": {
         "type": "git",
         "url": "git+https://github.com/MarCarloGarcia/FastAPI-Selenium.git"
