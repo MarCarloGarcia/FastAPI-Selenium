@@ -21,11 +21,12 @@ async def root():
 
 @app.get("/homepage")
 async def demo_get():
-    driver=createDriver()
+    driver = createDriver()
 
     homepage = getGoogleHomepage(driver)
     driver.close()
     return homepage
+
 
 @app.post("/backgroundDemo")
 async def demo_post(inp: Msg, background_tasks: BackgroundTasks):
