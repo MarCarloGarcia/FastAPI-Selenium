@@ -13,9 +13,6 @@ def createDriver() -> webdriver.Chrome:
 
     chrome_options.add_experimental_option("prefs", prefs)
     myDriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-    #service = Service(executable_path="E:\to save\App installer\chromedriver_win32")
-    #myDriver = webdriver.Chrome(service=service)
-
     return myDriver
 
 def getGoogleHomepage(driver: webdriver.Chrome) -> str:
