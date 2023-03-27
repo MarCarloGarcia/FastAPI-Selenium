@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "start": "uvicorn main:app --host 0.0.0.0 --port $PORT"
+        "start": "uvicorn main:app --host 0.0.0.0 --port 8000"
     },
     "repository": {
         "type": "git",
