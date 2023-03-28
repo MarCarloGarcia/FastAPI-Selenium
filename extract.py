@@ -1,13 +1,21 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.by import By
+import requests
+from io import BytesIO
+from PIL import Image, ImageFilter
+import numpy as np
+
 
 #Set to true when running local - testing
 #set to false when running remotely - deployed (uses limited saucelab)
-local = False
+runOnLocal = 0
 
 def createDriver() -> webdriver.Chrome:
-    if local:
+
+    if runOnLocal:
+        print("running in local")
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--headless")
         chrome_options.add_argument("--no-sandbox")
@@ -45,7 +53,7 @@ def createDriver() -> webdriver.Chrome:
         return myDriver
 
 
-
+'''
 def getGoogleHomepage(driver: webdriver.Chrome) -> str:
     driver.get("https://www.google.com")
     return driver.page_source
@@ -54,3 +62,61 @@ def doBackgroundTask(inp):
     print("Doing background task")
     print(inp.msg)
     print("Done")
+'''
+
+
+def open_url(driver: webdriver.Chrome,
+             url: str) -> str:
+    driver.get(url)
+    driver.maximize_window()
+    get_page_source = driver.page_source
+    hindi = check_Hindi(get_page_source)
+
+    img_element = driver.find_element(By.XPATH, "//img[@alt='Never stop learning.']")
+    img_src = img_element.get_attribute("src")
+    image_HD = check_image(img_src)
+
+    if not (hindi & image_HD):
+        return "Fail"
+
+    return "Pass"
+
+
+#Check if Hindi
+def check_Hindi(receive_page_source:str):
+    # search for the text "अपना अगला कोर्स खोजें।" in the page source
+    # get the page source
+    print(receive_page_source)
+    if "पाठ्यक्रम" in receive_page_source:
+        print("Found hindi on the webpage!")
+        return True
+    else:
+        print("Could not find hindi on the webpage.")
+        return False
+
+def check_image(src:str):
+    print(src)
+    response = requests.get(src)
+    img = Image.open(BytesIO(response.content))
+
+    img_gray = img.convert('L')  # convert the image to grayscale
+    blur_radius = 2
+    img_blur = img_gray.filter(ImageFilter.GaussianBlur(blur_radius))
+
+    blur_score = 0
+    for i in range(1, 9):
+        kernel = ImageFilter.Kernel((3,3), [-1,-1,-1,-1,8,-1,-1,-1,-1])
+        img_lap = img_blur.filter(kernel)
+        variance = np.var(np.array(img_lap))
+        blur_score += variance
+
+    blur_score *= 100
+    print(blur_score)
+
+    if blur_score > 300:
+        print("Image is blurry")
+        return False
+    else:
+        print("Image is not blurry")
+        return True
+
