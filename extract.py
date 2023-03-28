@@ -12,7 +12,11 @@ def createDriver() -> webdriver.Chrome:
     chrome_options.headless = True
 
     chrome_options.add_experimental_option("prefs", prefs)
-    myDriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    #myDriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    myDriver = webdriver.Remote(
+        command_executor="http://192.168.1.10:4444/wd/hub",
+        options=chrome_options
+    )
     return myDriver
 
 def getGoogleHomepage(driver: webdriver.Chrome) -> str:
