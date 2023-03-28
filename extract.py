@@ -86,7 +86,6 @@ def open_url(driver: webdriver.Chrome,
 def check_Hindi(receive_page_source:str):
     # search for the text "अपना अगला कोर्स खोजें।" in the page source
     # get the page source
-    print(receive_page_source)
     if "पाठ्यक्रम" in receive_page_source:
         print("Found hindi on the webpage!")
         return True
@@ -95,7 +94,7 @@ def check_Hindi(receive_page_source:str):
         return False
 
 def check_image(src:str):
-    print(src)
+    #print(src)
     response = requests.get(src)
     img = Image.open(BytesIO(response.content))
 
@@ -111,8 +110,6 @@ def check_image(src:str):
         blur_score += variance
 
     blur_score *= 100
-    print(blur_score)
-
     if blur_score > 300:
         print("Image is blurry")
         return False

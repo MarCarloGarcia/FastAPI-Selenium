@@ -44,5 +44,5 @@ async def get_url(q: str):
     driver = createDriver()
     url = q
     homepage = open_url(driver, url)
-    #driver.close()
+    driver.close()
     return homepage
