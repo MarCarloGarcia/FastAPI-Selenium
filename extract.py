@@ -1,11 +1,13 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 import requests
 from io import BytesIO
 from PIL import Image, ImageFilter
 import numpy as np
+from selenium.webdriver.support import expected_conditions as EC
 
 
 #Set to true when running local - testing
@@ -34,7 +36,7 @@ def createDriver() -> webdriver.Chrome:
         # Set options
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')  # example option
-        options.add_argument("--no-sandbox")
+        #options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
 
         # Set desired capabilities
@@ -67,15 +69,21 @@ def doBackgroundTask(inp):
 
 def open_url(driver: webdriver.Chrome,
              url: str) -> str:
+    driver.implicitly_wait(10)
     driver.get(url)
     driver.maximize_window()
     get_page_source = driver.page_source
     hindi = check_Hindi(get_page_source)
 
-    img_element = driver.find_element(By.XPATH, "//img[@alt='Never stop learning.']")
+    img_id = driver.find_element(By.ID, "learning-illus")
+    img_element = img_id.find_element(By.XPATH, "//img[@alt='Never stop learning.']")
     img_src = img_element.get_attribute("src")
+    
+    '''
+    img_src = driver.find_element(By.ID, "learning-illus").get_attribute("src")
+    '''
+    print(img_src)
     image_HD = check_image(img_src)
-
     if not (hindi & image_HD):
         return "Fail"
 
