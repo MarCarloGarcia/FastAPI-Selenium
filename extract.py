@@ -82,7 +82,7 @@ def open_url(driver: webdriver.Chrome,
     '''
     img_src = driver.find_element(By.ID, "learning-illus").get_attribute("src")
     '''
-    print(img_src)
+    #print(img_src)
     image_HD = check_image(img_src)
     if not (hindi & image_HD):
         return "Fail"
